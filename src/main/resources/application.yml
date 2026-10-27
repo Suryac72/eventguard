@@ -1,0 +1,46 @@
+
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: eventguard
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+
+    properties:
+      security.protocol: ${KAFKA_SECURITY_PROTOCOL:SASL_SSL}
+      ssl.endpoint.identification.algorithm: https
+      ssl.truststore.type: PKCS12
+      ssl.truststore.location: ${KAFKA_SSL_TRUSTSTORE_LOCATION}
+      ssl.truststore.password: ${KAFKA_SSL_TRUSTSTORE_PASSWORD}
+      sasl.mechanism: ${KAFKA_SASL_MECHANISM:SCRAM-SHA-512}
+      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="${KAFKA_SASL_USERNAME}" password="${KAFKA_SASL_PASSWORD}";
+      sasl.username: ${KAFKA_SASL_USERNAME}
+      sasl.password: ${KAFKA_SASL_PASSWORD}
+
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP:eventguard-processor}
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true

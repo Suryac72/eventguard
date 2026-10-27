@@ -1,0 +1,15 @@
+
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "EventGuard - Spring Boot",
+      "request": "launch",
+      "mainClass": "com.eventguard.EventGuardApplication",
+      "projectName": "eventguard",
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: eventguard-postgres
+    environment:
+      POSTGRES_DB: eventguard
+      POSTGRES_USER: eventguard
+      POSTGRES_PASSWORD: eventguard
+    ports:
+      - "5432:5432"
+    volumes:
+      - eventguard_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eventguard -d eventguard"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  eventguard_pgdata:
