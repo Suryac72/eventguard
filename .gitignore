@@ -1,6 +1,6 @@
-target/
 .env
-.idea/
-*.iml
-.DS_Store
+.env.*
 cert/
+*.p12
+*.jks
+target/
