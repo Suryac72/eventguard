@@ -3,25 +3,18 @@
 set -eu
 
 if [ -n "${KAFKA_CA_CERT_BASE64:-}" ]; then
-    : "${KAFKA_SSL_TRUSTSTORE_PASSWORD:?Truststore password is required}"
-
-    CA_FILE="/tmp/eventguard-ca.pem"
-    TRUSTSTORE="/tmp/kafka-truststore.p12"
-
-    printf '%s' "$KAFKA_CA_CERT_BASE64" | base64 -d > "$CA_FILE"
+    echo "$KAFKA_CA_CERT_BASE64" | base64 -d > /tmp/eventguard-ca.pem
 
     keytool -importcert \
         -noprompt \
-        -alias aiven-kafka-ca \
-        -file "$CA_FILE" \
-        -keystore "$TRUSTSTORE" \
+        -alias aiven-ca \
+        -file /tmp/eventguard-ca.pem \
+        -keystore /tmp/kafka-truststore.p12 \
         -storetype PKCS12 \
-        -storepass "$KAFKA_SSL_TRUSTSTORE_PASSWORD"
+        -storepass "${KAFKA_SSL_TRUSTSTORE_PASSWORD:?Set KAFKA_SSL_TRUSTSTORE_PASSWORD}" 
 
-    export KAFKA_SSL_TRUSTSTORE_LOCATION="$TRUSTSTORE"
+    export KAFKA_SSL_TRUSTSTORE_LOCATION=/tmp/kafka-truststore.p12
     export KAFKA_SSL_TRUSTSTORE_TYPE=PKCS12
-
-    rm -f "$CA_FILE"
 fi
 
 exec java -jar /app/eventguard.jar
